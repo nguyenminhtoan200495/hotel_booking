@@ -1,8 +1,7 @@
 const db = require('../models');
 
-const Room = db.room;
-
-// const { room: Room } = require('../models'); // Import mô hình Room
+const { room: Room, booking: Booking } = db;
+const { Op } = db.Sequelize;
 
 const getAllRooms = async (req, res) => {
   try {
@@ -24,6 +23,38 @@ const getRoomById = async (req, res) => {
     }
   } catch (error) {
     res.status(500).send({ message: error.message });
+  }
+};
+
+const getAvailableRooms = async (req, res) => {
+  try {
+    // Tìm tất cả các phòng có ít nhất một booking trong tương lai
+    const bookedRooms = await Booking.findAll({
+      where: {
+        endDate: { [Op.gt]: new Date() }, // endDate lớn hơn ngày hiện tại
+      },
+      attributes: ['roomId'],
+    });
+
+    // Lấy danh sách các roomId đã được đặt
+    const bookedRoomIds = bookedRooms.map((booking) => booking.roomId);
+
+    // Tìm tất cả các phòng không nằm trong danh sách các phòng đã đặt
+    const availableRooms = await Room.findAll({
+      where: {
+        id: { [Op.notIn]: bookedRoomIds },
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: availableRooms,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+    });
   }
 };
 
@@ -77,6 +108,7 @@ const deleteRoom = async (req, res) => {
 module.exports = {
   getAllRooms,
   getRoomById,
+  getAvailableRooms,
   createRoom,
   updateRoom,
   deleteRoom,

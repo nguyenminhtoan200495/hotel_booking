@@ -20,6 +20,7 @@ db.sequelize = sequelize;
 db.user = require('./user.model')(sequelize, Sequelize);
 db.role = require('./role.model')(sequelize, Sequelize);
 db.room = require('./room.model')(sequelize, Sequelize);
+db.booking = require('./booking.model')(sequelize, Sequelize);
 
 db.role.belongsToMany(db.user, {
   through: 'user_roles',
@@ -33,6 +34,12 @@ db.room.belongsTo(db.user, {
   foreignKey: 'adminId',
   as: 'admin',
 });
+
+db.booking.belongsTo(db.room, { foreignKey: 'roomId' });
+db.room.hasMany(db.booking, { foreignKey: 'roomId' });
+
+db.user.hasMany(db.booking, { foreignKey: 'customerId', as: 'bookings' }); // Sử dụng 'id' ngầm định
+db.booking.belongsTo(db.user, { foreignKey: 'customerId', as: 'customer' });
 
 db.ROLES = ['user', 'admin', 'moderator'];
 

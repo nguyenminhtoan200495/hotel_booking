@@ -11,6 +11,11 @@ router.get(
   roomController.getAllRooms
 );
 router.get(
+  '/available',
+  [authJwt.verifyToken, authJwt.isAdmin],
+  roomController.getAvailableRooms
+);
+router.get(
   '/:id',
   [authJwt.verifyToken, authJwt.isAdmin],
   roomController.getRoomById

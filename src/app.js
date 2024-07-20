@@ -6,6 +6,7 @@ const { validateLogin } = require('./middleware/validationMiddleware');
 const errorHandler = require('./middleware/errorMiddleware');
 require('dotenv').config();
 const roomRoutes = require('./routes/room.routes');
+const bookingRoutes = require('./routes/booking.routes');
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.post('/login', validateLogin, (req, res) => {
 });
 
 app.use('/rooms', roomRoutes);
+app.use('/booking', bookingRoutes);
 
 require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);

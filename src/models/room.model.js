@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Room = sequelize.define('room', {
+  const Room = sequelize.define('rooms', {
     type: {
       type: Sequelize.STRING,
       allowNull: false, // Không cho phép giá trị null
