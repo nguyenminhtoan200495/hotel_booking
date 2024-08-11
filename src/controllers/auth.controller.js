@@ -6,7 +6,7 @@ const config = require('../config/auth.config');
 
 const { Op } = db.Sequelize;
 
-exports.signup = async (req, res) => {
+const signup = async (req, res) => {
   try {
     const user = await User.create({
       username: req.body.username,
@@ -35,7 +35,7 @@ exports.signup = async (req, res) => {
   }
 };
 
-exports.signin = async (req, res) => {
+const signin = async (req, res) => {
   try {
     const user = await User.findOne({
       where: {
@@ -81,4 +81,9 @@ exports.signin = async (req, res) => {
   } catch (err) {
     return res.status(500).send({ message: err.message });
   }
+};
+
+module.exports = {
+  signin,
+  signup,
 };
