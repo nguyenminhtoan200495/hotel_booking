@@ -3,6 +3,8 @@ const db = require('../models');
 const { room: Room, booking: Booking } = db;
 const { Op } = db.Sequelize;
 
+const { getAvailableRoomsService } = require('../services/room.service');
+
 const getAllRooms = async (req, res) => {
   try {
     const rooms = await Room.findAll();
@@ -28,23 +30,7 @@ const getRoomById = async (req, res) => {
 
 const getAvailableRooms = async (req, res) => {
   try {
-    // Tìm tất cả các phòng có ít nhất một booking trong tương lai
-    const bookedRooms = await Booking.findAll({
-      where: {
-        endDate: { [Op.gt]: new Date() }, // endDate lớn hơn ngày hiện tại
-      },
-      attributes: ['roomId'],
-    });
-
-    // Lấy danh sách các roomId đã được đặt
-    const bookedRoomIds = bookedRooms.map((booking) => booking.roomId);
-
-    // Tìm tất cả các phòng không nằm trong danh sách các phòng đã đặt
-    const availableRooms = await Room.findAll({
-      where: {
-        id: { [Op.notIn]: bookedRoomIds },
-      },
-    });
+    const availableRooms = await getAvailableRoomsService();
 
     return res.status(200).json({
       success: true,
