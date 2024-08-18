@@ -3,37 +3,38 @@ const express = require('express');
 const router = express.Router();
 const roomController = require('../controllers/room.controller');
 const authJwt = require('../middleware/authJwtMiddleware');
+const asyncRoute = require('../utils/asyncRoute');
 
 // Các route yêu cầu quyền admin
 router.get(
   '/',
   [authJwt.verifyToken, authJwt.isAdmin],
-  roomController.getAllRooms
+  asyncRoute(roomController.getAllRooms)
 );
 router.get(
   '/available',
   [authJwt.verifyToken, authJwt.isAdmin],
-  roomController.getAvailableRooms
+  asyncRoute(roomController.getAvailableRooms)
 );
 router.get(
   '/:id',
   [authJwt.verifyToken, authJwt.isAdmin],
-  roomController.getRoomById
+  asyncRoute(roomController.getRoomById)
 );
 router.post(
   '/',
   [authJwt.verifyToken, authJwt.isAdmin],
-  roomController.createRoom
+  asyncRoute(roomController.createRoom)
 );
 router.put(
   '/:id',
   [authJwt.verifyToken, authJwt.isAdmin],
-  roomController.updateRoom
+  asyncRoute(roomController.updateRoom)
 );
 router.delete(
   '/:id',
   [authJwt.verifyToken, authJwt.isAdmin],
-  roomController.deleteRoom
+  asyncRoute(roomController.deleteRoom)
 );
 
 module.exports = router;

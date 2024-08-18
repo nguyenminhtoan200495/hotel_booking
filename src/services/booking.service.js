@@ -1,6 +1,6 @@
 const db = require('../models');
 
-const { room: Room, booking: Booking } = db;
+const { booking: Booking } = db;
 const { Op } = require('../models').Sequelize;
 
 const findOverlappingBookings = async (roomIds, startDate, endDate) =>

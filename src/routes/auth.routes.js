@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { verifySignUp } = require('../middleware');
 const controller = require('../controllers/auth.controller');
+const asyncRoute = require('../utils/asyncRoute');
 
 router.use((req, res, next) => {
   res.header(
@@ -15,9 +16,9 @@ router.use((req, res, next) => {
 router.post(
   '/signup',
   [verifySignUp.checkDuplicateUsernameOrEmail, verifySignUp.checkRolesExisted],
-  controller.signup
+  asyncRoute(controller.signup)
 );
 
-router.post('/signin', controller.signin);
+router.post('/signin', asyncRoute(controller.signin));
 
 module.exports = router;

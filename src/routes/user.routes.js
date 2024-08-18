@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { authJwt } = require('../middleware');
 const controller = require('../controllers/user.controller');
+const asyncRoute = require('../utils/asyncRoute');
 
 router.use((req, res, next) => {
   res.header(
@@ -12,20 +13,20 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get('/all', controller.allAccess);
+router.get('/all', asyncRoute(controller.allAccess));
 
-router.get('/user', [authJwt.verifyToken], controller.userBoard);
+router.get('/user', [authJwt.verifyToken], asyncRoute(controller.userBoard));
 
 router.get(
   '/mod',
   [authJwt.verifyToken, authJwt.isModerator],
-  controller.moderatorBoard
+  asyncRoute(controller.moderatorBoard)
 );
 
 router.get(
   '/admin',
   [authJwt.verifyToken, authJwt.isAdmin],
-  controller.adminBoard
+  asyncRoute(controller.adminBoard)
 );
 
 module.exports = router;
